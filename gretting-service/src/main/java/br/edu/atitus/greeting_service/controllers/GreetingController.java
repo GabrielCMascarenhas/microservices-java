@@ -1,8 +1,13 @@
 package br.edu.atitus.greeting_service.controllers;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,13 +29,27 @@ public class GreetingController {
 		super();
 		this.config = config;
 	}
-
-	@GetMapping
-	public ResponseEntity<String> greet(@RequestParam(required = false) String name){
-		String greetingReturn = config.getGreeting(); //Era greeting
-		String nameReturn = name != null ? name : config.getDefaultName(); //Era defaultName
+	
+	public String greetBuilder(String name) {
+		String greetingReturn = config.getGreeting();//Era greeting
+		String nameReturn = name != null ? name : config.getDefaultName();  //Era defaultName
 		String textReturn = String.format("%s,  %s !!!", greetingReturn, nameReturn);
-		
-		return ResponseEntity.ok(textReturn);
+		return textReturn;
+	}
+	
+	@GetMapping({"/{name}", "/"})
+	public ResponseEntity<String> greetPath(@PathVariable(required = false) String name){
+		return ResponseEntity.ok(greetBuilder(name));
+	}
+
+	@GetMapping()
+	public ResponseEntity<String> greetParam(@RequestParam(required = false) String name){
+		return ResponseEntity.ok(greetBuilder(name));
+	}
+	
+	@PostMapping
+	public ResponseEntity<String> save(@RequestBody Map<String, String> nameRequired) {
+		String name = nameRequired.get("name");
+		return ResponseEntity.ok(greetBuilder(name));
 	}
 }
