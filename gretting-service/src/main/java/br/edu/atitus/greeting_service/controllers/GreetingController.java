@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.atitus.greeting_service.configs.GreetingConfig;
+import br.edu.atitus.greeting_service.dtos.GreetingDTO;
 
 @RestController
 @RequestMapping("greeting")
@@ -48,8 +49,10 @@ public class GreetingController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody Map<String, String> nameRequired) {
-		String name = nameRequired.get("name");
-		return ResponseEntity.ok(greetBuilder(name));
+	public ResponseEntity<String> save(@RequestBody GreetingDTO dto) {
+		String greetingReturn = config.getGreeting();
+		String nameReturn = dto.name();
+		String textReturn = String.format("%s,  %s !!!", greetingReturn, nameReturn);
+		return ResponseEntity.ok(textReturn);
 	}
 }
