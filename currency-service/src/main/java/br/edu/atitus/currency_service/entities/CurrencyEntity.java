@@ -27,7 +27,7 @@ public class CurrencyEntity {
 	@Transient
 	private double convertedValue;
 	@Transient
-	private String enviroment;
+	private String environment;
 
 	public double getConvertedValue() {
 		return convertedValue;
@@ -37,12 +37,12 @@ public class CurrencyEntity {
 		this.convertedValue = convertedValue;
 	}
 
-	public String getEnviroment() {
-		return enviroment;
+	public String getEnvironment() {
+		return environment;
 	}
 
-	public void setEnviroment(String enviroment) {
-		this.enviroment = enviroment;
+	public void setEnvironment(String environment) {
+		this.environment = environment;
 	}
 
 	public Long getId() {

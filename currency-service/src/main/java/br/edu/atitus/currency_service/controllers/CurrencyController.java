@@ -29,7 +29,7 @@ public class CurrencyController {
 		CurrencyEntity currency = repository.findBySourceAndTarget(source, target).orElseThrow(() -> new Exception("Currency not found"));
 		
 		currency.setConvertedValue(value * currency.getConversionRate());
-		currency.setEnviroment("Currency running in port: " + serverPort);
+		currency.setEnvironment("Currency running in port: " + serverPort);
 		
 		
 		return ResponseEntity.ok(currency);
