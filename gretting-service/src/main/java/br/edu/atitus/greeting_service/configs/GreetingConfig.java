@@ -9,16 +9,19 @@ public class GreetingConfig {
 
 	private String greeting;
 	private String defaultName;
-	
+
 	public String getGreeting() {
 		return greeting;
 	}
+
 	public void setGreeting(String greeting) {
 		this.greeting = greeting;
 	}
+
 	public String getDefaultName() {
 		return defaultName;
 	}
+
 	public void setDefaultName(String defaultName) {
 		this.defaultName = defaultName;
 	}

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.edu.atitus.currency_service.entities.CurrencyEntity;
 
-public interface CurrencyRepository extends JpaRepository<CurrencyEntity, Long>{
-	
+public interface CurrencyRepository extends JpaRepository<CurrencyEntity, Long> {
+
 	Optional<CurrencyEntity> findBySourceAndTarget(String source, String target);
-										//aqui eu respeito o camelcase
+	// aqui eu respeito o camelcase
 }

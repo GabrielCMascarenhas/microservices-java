@@ -24,24 +24,25 @@ public class OpenProductController {
 		this.repository = repository;
 		this.currencyClient = currencyClient;
 	}
-	
+
 	@Value("${server.port}")
 	private int serverPort;
-	
-	
+
 	@GetMapping("/{idProduct}/{targetCurrency}")
-	public ResponseEntity<ProductEntity> getProduct(@PathVariable Long idProduct, @PathVariable String targetCurrency) throws Exception {
-		
-		ProductEntity product = repository.findById(idProduct).orElseThrow(()-> new Exception("Product not found"));
+	public ResponseEntity<ProductEntity> getProduct(@PathVariable Long idProduct, @PathVariable String targetCurrency)
+			throws Exception {
+
+		ProductEntity product = repository.findById(idProduct).orElseThrow(() -> new Exception("Product not found"));
 		product.setEnvironment("Product-service running on Port: " + serverPort);
-		if(targetCurrency.equalsIgnoreCase(product.getCurrency()))
+		if (targetCurrency.equalsIgnoreCase(product.getCurrency()))
 			product.setConvertedPrice(product.getPrice());
 		else {
-			CurrencyResponse currency = currencyClient.getCurrency(product.getPrice(), product.getCurrency(), targetCurrency);
+			CurrencyResponse currency = currencyClient.getCurrency(product.getPrice(), product.getCurrency(),
+					targetCurrency);
 			product.setConvertedPrice(currency.getConvertedValue());
 			product.setEnvironment(product.getEnvironment() + " - " + currency.getEnvironment());
 		}
-		
+
 		return ResponseEntity.ok(product);
 	}
 }

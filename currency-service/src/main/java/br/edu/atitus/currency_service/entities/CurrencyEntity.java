@@ -9,21 +9,21 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name="tb_currency")
+@Table(name = "tb_currency")
 public class CurrencyEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "source_currency")
 	private String source;
 
 	@Column(name = "target_currency")
 	private String target;
-	
+
 	@Column(name = "conversion_rate")
 	private double conversionRate;
-	
+
 	@Transient
 	private double convertedValue;
 	@Transient
@@ -76,6 +76,5 @@ public class CurrencyEntity {
 	public void setConversionRate(double conversionRate) {
 		this.conversionRate = conversionRate;
 	}
-	
-	
+
 }

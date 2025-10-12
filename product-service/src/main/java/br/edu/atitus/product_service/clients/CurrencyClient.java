@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CurrencyClient {
 
 	@GetMapping("/currency/{value}/{source}/{target}")
-	CurrencyResponse getCurrency (
-			@PathVariable double value,
-			@PathVariable String source, 
-			@PathVariable String target
-			);
-	
+	CurrencyResponse getCurrency(@PathVariable double value, @PathVariable String source, @PathVariable String target);
+
 }
