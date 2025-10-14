@@ -2,7 +2,7 @@ package br.edu.atitus.currency_service.clients;
 
 import java.util.List;
 
-public class CurrencyBCResponse {
+public class TypeCurrencyBCResponse {
 
 	private List<Values> value;
 
@@ -15,14 +15,15 @@ public class CurrencyBCResponse {
 	}
 
 	public static class Values {
-		private double cotacaoVenda;
+		private String typeCurrency;
 
-		public double getCotacaoVenda() {
-			return cotacaoVenda;
+		public String getTypeCurrency() {
+			return typeCurrency;
 		}
 
-		public void setCotacaoVenda(double cotacaoVenda) {
-			this.cotacaoVenda = cotacaoVenda;
+		public void setTypeCurrency(String typeCurrency) {
+			this.typeCurrency = typeCurrency;
 		}
 	}
+
 }
