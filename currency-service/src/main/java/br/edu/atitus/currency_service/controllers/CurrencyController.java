@@ -2,8 +2,6 @@ package br.edu.atitus.currency_service.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.atitus.currency_service.clients.CurrencyBCClient;
 import br.edu.atitus.currency_service.clients.CurrencyBCResponse;
-import br.edu.atitus.currency_service.clients.TypeCurrencyBCClient;
-import br.edu.atitus.currency_service.clients.TypeCurrencyBCResponse;
 import br.edu.atitus.currency_service.entities.CurrencyEntity;
 import br.edu.atitus.currency_service.repositories.CurrencyRepository;
 
@@ -24,20 +20,20 @@ import br.edu.atitus.currency_service.repositories.CurrencyRepository;
 @RequestMapping("currency")
 public class CurrencyController {
 
+	private static final int ATTEMPTS = 15;
+
 	private final CurrencyRepository repository;
 	private final CurrencyBCClient currencyBCClient;
-	private final TypeCurrencyBCClient typeCurrencyBCClient;
 	private final CacheManager cacheManager;
 
 	@Value("${server.port}")
 	private int serverPort;
 
 	public CurrencyController(CurrencyRepository repository, CurrencyBCClient currencyBCClient,
-			TypeCurrencyBCClient typeCurrencyBCClient, CacheManager cacheManager) {
+			CacheManager cacheManager) {
 		super();
 		this.repository = repository;
 		this.currencyBCClient = currencyBCClient;
-		this.typeCurrencyBCClient = typeCurrencyBCClient;
 		this.cacheManager = cacheManager;
 	}
 
@@ -61,29 +57,22 @@ public class CurrencyController {
 			currency = new CurrencyEntity();
 			currency.setSource(source);
 			currency.setTarget(target);
+
 			if (source.equals(target)) {
 				currency.setConversionRate(1);
 			} else {
 				try {
 					double sourceRate = 1;
 					double targetRate = 1;
-					
-					TypeCurrencyBCResponse validCurrency = typeCurrencyBCClient.getAvailableCurrencies();
-					
-					List<String> types = validCurrency.getValue().stream().map(TypeCurrencyBCResponse.Values::getTypeCurrency)
-							.collect(Collectors.toList());
 
 					LocalDate date = LocalDate.now();
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 
 					if (!source.equals("BRL")) {
-						if (!types.contains(source))
-							throw new Exception();
 						CurrencyBCResponse resp = currencyBCClient.getCurrencyBC(source, date.format(formatter));
-
 						if (resp.getValue().isEmpty()) {
 							try {
-								for (int i = 1; i <= 15; i++) {
+								for (int i = 1; i <= ATTEMPTS; i++) {
 									LocalDate attemptDate = date.minusDays(i);
 									resp = currencyBCClient.getCurrencyBC(source, attemptDate.format(formatter));
 
@@ -95,20 +84,14 @@ public class CurrencyController {
 								throw new Exception();
 							}
 						}
-
-						if (resp.getValue().isEmpty())
-							throw new Exception();
 						sourceRate = resp.getValue().get(resp.getValue().size() - 1).getCotacaoVenda();
 					}
 
 					if (!target.equals("BRL")) {
-						if (!types.contains(target))
-							throw new Exception();
 						CurrencyBCResponse resp = currencyBCClient.getCurrencyBC(target, date.format(formatter));
-
 						if (resp.getValue().isEmpty()) {
 							try {
-								for (int i = 1; i <= 15; i++) {
+								for (int i = 1; i <= ATTEMPTS; i++) {
 									LocalDate attemptDate = date.minusDays(i);
 									resp = currencyBCClient.getCurrencyBC(target, attemptDate.format(formatter));
 
@@ -120,12 +103,8 @@ public class CurrencyController {
 								throw new Exception();
 							}
 						}
-
-						if (resp.getValue().isEmpty())
-							throw new Exception();
 						targetRate = resp.getValue().get(resp.getValue().size() - 1).getCotacaoVenda();
 					}
-
 					currency.setConversionRate(sourceRate / targetRate);
 					dataSource = "API BCB";
 

@@ -4,17 +4,17 @@ import java.util.List;
 
 public class CurrencyBCResponse {
 
-	private List<Values> value;
+	private List<values> value;
 
-	public List<Values> getValue() {
+	public List<values> getValue() {
 		return value;
 	}
 
-	public void setValue(List<Values> value) {
+	public void setValue(List<values> value) {
 		this.value = value;
 	}
 
-	public static class Values {
+	public static class values {
 		private double cotacaoVenda;
 
 		public double getCotacaoVenda() {

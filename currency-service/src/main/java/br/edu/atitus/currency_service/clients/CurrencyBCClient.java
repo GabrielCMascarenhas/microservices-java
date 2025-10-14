@@ -4,9 +4,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "CurrencyBC", url = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata", fallback = CurrencyBCFallback.class)
+@FeignClient(name = "CurrencyBC", url = "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata", fallback = CurrencyBCFallback.class) // COloquei.class
 public interface CurrencyBCClient {
 
 	@GetMapping("/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='{moeda}'&@dataCotacao='{dataCotacao}'&$format=json")
 	CurrencyBCResponse getCurrencyBC(@PathVariable String moeda, @PathVariable String dataCotacao);
+
 }
