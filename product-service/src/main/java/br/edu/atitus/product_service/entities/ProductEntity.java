@@ -20,8 +20,13 @@ public class ProductEntity {
 	private String brand;
 	private String model;
 	private double price;
-	private String currency;
+
 	@Column(length = 3)
+	private String currency;
+	private Integer stock;
+
+	@Column(name = "image_url")
+	private String imageUrl;
 
 	@Transient
 	private String environment;
@@ -92,4 +97,19 @@ public class ProductEntity {
 		this.convertedPrice = convertedPrice;
 	}
 
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }
